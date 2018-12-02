@@ -1,0 +1,176 @@
+<div class="wrapper">
+  <div class="content">
+    <div class="container">
+      <h1>Knapsack Solver</h1>
+
+      <div class="row">
+        <div class="col">
+          <div class="interface">
+            <h4>Algorithm Selection</h4>
+            <button mat-raised-button color="primary" matTooltip="Greedy algorithm will find a local optimum. It is CPU friendly and fast :)"
+              (click)="startGreedy()">
+              Greedy Algorithm</button>
+            <button mat-raised-button color="accent" matTooltip="Branch algorithm will find a better solution than Greedy. But it takes more CPU ressources and it takes a bit longer"
+              (click)="startBranch()">
+              Branch Algorithm</button>
+            <button mat-raised-button color="warn" matTooltip="Brute Force algorithm will find best solution. It takes probably too long... Save your tabs because you probably need to restart your Browser!"
+              (click)="startBruteForce()">
+              Brute-Force</button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Table of Items</h3>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-sm-12 col-md-8">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef> Value </th>
+            <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cost">
+            <th mat-header-cell *matHeaderCellDef> Cost </th>
+            <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div class="col-sm-12 col-md-4">
+          <div class="capacity">
+            <h4>Enter Restriction</h4>
+            <form #f="ngForm">
+              <mat-form-field>
+                <input matInput placeholder="Maximum Cost" value="750" name="input-cost" [(ngModel)]="maxcost">
+              </mat-form-field>
+            </form>
+          </div>
+
+          <div class="item-management">
+            <h4>Item Management</h4>
+            <button mat-raised-button color="primary" (click)="shuffleItems()">Shuffle Items</button><br>
+            <button mat-raised-button color="primary">Add new Item</button> <br>
+            <button mat-raised-button color="">Upload CSV</button> <br>
+            <button mat-raised-button color="">Delete Selected Items</button> <br>
+            <button mat-raised-button color="warn">Clear All Items</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="result-div" *ngIf="greedyValueResult">
+            <div class="row" *ngIf="greedyValueResult">
+
+              <div class="col-sm-12 col-md-4 result greedy-density">
+                <strong class="accent">Greedy by density result: </strong><br>
+                <strong>Total Value: {{greedyDensityResult.totalValue}}, Total Cost: {{greedyDensityResult.totalCost}}</strong>
+                <ul>
+                  <li *ngFor="let item of greedyDensityResult.items">
+                    {{item}}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-sm-12 col-md-4 result greedy-value">
+                <strong>Greedy by value result: </strong><br>
+                <strong>Total Value: {{greedyValueResult.totalValue}}, Total Cost: {{greedyValueResult.totalCost}}</strong>
+                <ul>
+                  <li *ngFor="let item of greedyValueResult.items">
+                    {{item}}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-sm-12 col-md-4 result greedy-cost">
+                <strong>Greedy by cost result: </strong><br>
+                <strong>Total Value: {{greedyCostResult.totalValue}}, Total Cost: {{greedyCostResult.totalCost}}</strong>
+                <ul>
+                  <li *ngFor="let item of greedyCostResult.items">
+                    {{item}}
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="greedyValueResult">
+        <div class="col-sm-12 result-explain">
+          <div class="row">
+            <div class="col-md-4">
+              <h3>Greedy by density</h3>
+              <ul>
+                <li>Uses Price/Cost Ratio for picking the "best" item</li>
+                <li>Gets the most efficient item</li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Greedy by value</h3>
+                <ul>
+                  <li>Chooses the most valuable items first</li>
+                  <li>Doesn't care about the cost</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Greedy by cost</h3>
+                <ul>
+                  <li>Gets the least expensive items first</li>
+                  <li>Doesn't care about the value</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>
+            Origin Information about Optimization Model and this specific Knapsack Problem is taken from
+            <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0002-introduction-to-computational-thinking-and-data-science-fall-2016/lecture-videos/lecture-1-introduction-and-optimization-problems/">Introduction
+              to Computational Thinking and Data Science</a>.<br>
+            The applied greedy algorithm is modified by me from the base language Python to JavaScript. <br>
+            For a more generic description I swapped calories for cost.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'styles-variables';
+@import '~@ibm/plex/css/ibm-plex.min.css';
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+html,
+body {
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+/* Non Sticky Footer : https://jsfiddle.net/divy3993/523euaph/1/ */
+.wrapper {
+    min-height: 100%;
+    position: relative;
+}
+
+.content {
+    padding-bottom: 100px; /* height of the footer */
+}
+
+.footer {
+    position:absolute;
+    bottom:0;
+    left: 0;
+    height:92px;   
+    padding-top: 1rem;
+    width: 100%;
+    background-color: #3d4852;
+    color: white;
+    a,
+    a:hover,
+    a:focus,
+    a:visited {
+        color: #73C2FB;
+    }
+    font-size: 0.85rem;
+}
+
+@media (max-width: map-get($grid-breakpoints, sm)) {
+    .content {
+        padding-bottom: 136px;
+    }
+    
+    .footer {
+        height: 136px;
+    }
+}
